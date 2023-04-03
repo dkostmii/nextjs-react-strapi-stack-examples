@@ -15,3 +15,7 @@ to have multiple Node.JS versions on your machine.
 For example, [Strapi](https://strapi.io/) CMS requires you to install LTS version
 of NodeJS, but your project may be running on latest version.
 
+## Strapi
+
+Install Strapi CMS with MySQL, according to [this tutorial](https://strapi.io/blog/configuring-strapi-mysql-database).
+
