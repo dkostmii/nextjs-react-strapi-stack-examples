@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": {
+    "displayName": "Seo",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "MetaTitle": {
+      "type": "string"
+    },
+    "MetaDescription": {
+      "type": "string"
+    },
+    "SharedImage": {
+      "displayName": "SharedImage",
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.shared-image"
+    },
+    "keywords": {
+      "type": "string"
+    },
+    "preventIndexing": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
