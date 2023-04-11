@@ -6,24 +6,37 @@
   },
   "options": {},
   "attributes": {
-    "MetaTitle": {
-      "type": "string"
+    "metaTitle": {
+      "type": "string",
+      "required": true,
+      "minLength": 2
     },
-    "MetaDescription": {
-      "type": "string"
+    "metaDescription": {
+      "type": "string",
+      "required": true,
+      "minLength": 2
     },
-    "SharedImage": {
-      "displayName": "SharedImage",
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.shared-image"
+    "themeColor": {
+      "type": "string",
+      "default": "#000",
+      "regex": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+      "required": true,
+      "maxLength": 7,
+      "minLength": 4
     },
-    "keywords": {
-      "type": "string"
+    "websiteUrl": {
+      "type": "string",
+      "minLength": 11,
+      "regex": "^https?:\\/\\/[a-zA-Z]+(\\.[a-zA-Z]{2,})+(\\/[a-zA-Z0-9\\-]+)*\\/?$",
+      "required": true
     },
-    "preventIndexing": {
-      "type": "boolean",
-      "default": false
+    "cardImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }
