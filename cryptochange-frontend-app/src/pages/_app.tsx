@@ -7,21 +7,40 @@ import Head from 'next/head'
 
 import { createContext } from 'react'
 import { fetchAPI } from '../lib/api'
-import { getStrapiMedia, StrapiMedia } from '../lib/media'
+import { getStrapiMedia } from '../lib/media'
 
-export const GlobalContext = createContext({})
+import { GlobalData, OptionalGlobalData } from '@/lib/apiInterfaces'
+
+export const GlobalContext = createContext<OptionalGlobalData>({})
 
 interface AppStaticProps extends AppProps {
   pageProps: {
-    global: {
-      attributes: {
-        favicon: StrapiMedia
-      }
+    global?: {
+      attributes: GlobalData
     }
+    error?: string | {}
   }
 }
 
 export default function App({ Component, pageProps }: AppStaticProps) {
+  if (pageProps.error) {
+    const { error } = pageProps
+
+    return (
+      <>
+        <div>
+          <p>
+            Error occurred:<span>{error.toString()}</span>
+          </p>
+        </div>
+      </>
+    )
+  }
+
+  if (!pageProps.global) {
+    throw new TypeError('Expected pageProps.global to be defined.')
+  }
+
   const { global } = pageProps
 
   return (
@@ -31,6 +50,7 @@ export default function App({ Component, pageProps }: AppStaticProps) {
           rel="shortcut icon"
           href={getStrapiMedia(global.attributes.favicon)}
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <GlobalContext.Provider value={global.attributes}>
         <Component {...pageProps} />
@@ -48,15 +68,23 @@ App.getInitialProps = async (ctx: AppContext) => {
   const appProps = await NextApp.getInitialProps(ctx)
 
   // Fetch global site settings from Strapi
-  const globalRes = await fetchAPI('/global', {
-    populate: {
-      favicon: '*',
-      defaultSeo: {
-        populate: '*'
+  try {
+    const globalRes = await fetchAPI('global', {
+      populate: {
+        favicon: '*',
+        defaultSeo: {
+          populate: '*'
+        }
       }
-    }
-  })
+    })
 
-  // Pass the data to our page via props
-  return { ...appProps, pageProps: { global: globalRes.data } }
+    // Pass the data to our page via props
+    return { ...appProps, pageProps: { global: globalRes.data } }
+  } catch (e) {
+    if (!(e instanceof Error)) {
+      throw new TypeError('Expected e to be Error.')
+    }
+
+    return { ...appProps, pageProps: { error: e.message } }
+  }
 }
